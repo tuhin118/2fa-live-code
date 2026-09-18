@@ -1,4 +1,4 @@
-const CACHE_NAME = '2fa-live-v2';
+const CACHE_NAME = '2fa-live-v3';  // v2 → v3 (নতুন কন্টেন্ট ক্যাশ হবে)
 const ASSETS = [
   './',
   './index.html',
