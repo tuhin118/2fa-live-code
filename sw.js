@@ -1,4 +1,4 @@
-const CACHE_NAME = '2fa-live-v1';
+const CACHE_NAME = '2fa-live-v2';
 const ASSETS = [
   './',
   './index.html',
