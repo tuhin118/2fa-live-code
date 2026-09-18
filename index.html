@@ -350,6 +350,60 @@
       color: var(--green);
     }
 
+    /* 🔽 TikTok / Social Section 🔽 */
+    .social {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .social a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--green);
+      text-decoration: none;
+      background: rgba(0, 30, 18, 0.55);
+      transition: all .18s ease;
+      box-shadow: 0 0 12px rgba(0, 255, 140, 0.12);
+    }
+
+    .social a:hover {
+      border-color: var(--border-strong);
+      background: rgba(0, 255, 140, 0.12);
+      box-shadow: 0 0 22px rgba(0, 255, 140, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .social svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      filter: drop-shadow(0 0 6px rgba(0, 255, 140, 0.7));
+    }
+
+    .credit {
+      margin: 10px 0 0;
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .credit span { color: var(--green); text-shadow: 0 0 8px rgba(0,255,140,.6); }
+
     @media (max-width: 420px) {
       .row { grid-template-columns: 1fr 1fr; }
       .row > div:last-child { grid-column: span 2; }
@@ -398,6 +452,18 @@
 
     <button id="copy" type="button">Copy Code</button>
     <p class="hint">সিক্রেট শুধু আপনার ব্রাউজারেই থাকে · কোনো সার্ভারে যায় না · প্রথমবার লোডের পর অফলাইনেও চলে।</p>
+
+    <!-- 🔽 TikTok / Social Section 🔽 -->
+    <div class="social">
+      <a href="https://www.tiktok.com/@error_game_ar" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16.6 5.82a4.28 4.28 0 0 1-1.02-2.82h-3.1v12.4a2.6 2.6 0 1 1-1.85-2.49V9.74a5.7 5.7 0 1 0 4.95 5.65V8.9a7.36 7.36 0 0 0 4.22 1.33V7.13a4.28 4.28 0 0 1-3.2-1.31z"/>
+        </svg>
+        TikTok
+      </a>
+    </div>
+
+    <p class="credit">built by <span>@error_game_ar</span></p>
   </main>
 
   <script>
