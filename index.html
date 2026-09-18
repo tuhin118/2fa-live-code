@@ -1,1334 +1,259 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="bn">
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0">
-
-<title>2FA Live Code</title>
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#020806">
-
-<meta name="mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent">
-
-<meta name="apple-mobile-web-app-title"
-      content="2FA Live Code">
-
-<!-- App Icons -->
-<link rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="icon-192.png">
-
-<link rel="apple-touch-icon"
-      sizes="192x192"
-      href="icon-192.png">
-
-
-<style>
-
-:root{
-  --bg:#020806;
-  --card:#07140f;
-  --green:#20ff9a;
-  --green2:#00b86b;
-  --text:#dffff1;
-  --muted:#638b7a;
-  --border:rgba(32,255,154,.18);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  min-height:100vh;
-  color:var(--text);
-
-  font-family:
-  system-ui,
-  -apple-system,
-  BlinkMacSystemFont,
-  "Segoe UI",
-  sans-serif;
-
-  background:
-
-  radial-gradient(
-    circle at 50% 0%,
-    rgba(0,255,145,.16),
-    transparent 40%
-  ),
-
-  linear-gradient(
-    rgba(32,255,154,.025) 1px,
-    transparent 1px
-  ),
-
-  linear-gradient(
-    90deg,
-    rgba(32,255,154,.025) 1px,
-    transparent 1px
-  ),
-
-  var(--bg);
-
-  background-size:
-  auto,
-  32px 32px,
-  32px 32px;
-
-  overflow-x:hidden;
-}
-
-
-/* Hacker Scanline */
-
-body:after{
-
-  content:"";
-
-  position:fixed;
-
-  inset:0;
-
-  pointer-events:none;
-
-  background:
-  linear-gradient(
-    transparent 50%,
-    rgba(32,255,154,.025) 50%
-  );
-
-  background-size:
-  100% 4px;
-
-  z-index:9999;
-
-}
-
-
-/* Main */
-
-.container{
-
-  width:min(680px,94%);
-
-  margin:
-  25px auto
-  45px;
-
-}
-
-
-/* Header */
-
-.header{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  padding:15px 18px;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:18px;
-
-  background:
-  rgba(7,20,15,.90);
-
-  backdrop-filter:
-  blur(15px);
-
-  box-shadow:
-  0 0 35px
-  rgba(0,255,145,.07);
-
-}
-
-
-.brand{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:12px;
-
-  font-size:20px;
-
-  font-weight:800;
-
-}
-
-
-.logo{
-
-  width:42px;
-
-  height:42px;
-
-  display:grid;
-
-  place-items:center;
-
-  border-radius:13px;
-
-  overflow:hidden;
-
-  background:#020806;
-
-  box-shadow:
-  0 0 25px
-  rgba(32,255,154,.30);
-
-}
-
-
-.logo img{
-
-  width:100%;
-
-  height:100%;
-
-  object-fit:cover;
-
-}
-
-
-.live{
-
-  color:var(--green);
-
-  font:
-  700 11px monospace;
-
-  letter-spacing:1px;
-
-}
-
-
-/* Card */
-
-.card{
-
-  margin-top:18px;
-
-  padding:22px;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:22px;
-
-  background:
-  linear-gradient(
-    180deg,
-    rgba(10,29,21,.96),
-    rgba(4,14,10,.98)
-  );
-
-  box-shadow:
-  0 20px 70px
-  rgba(0,0,0,.40);
-
-}
-
-
-.label{
-
-  margin-bottom:10px;
-
-  color:var(--green);
-
-  font:
-  800 12px monospace;
-
-  letter-spacing:1.5px;
-
-}
-
-
-/* Input */
-
-textarea{
-
-  width:100%;
-
-  min-height:110px;
-
-  padding:16px;
-
-  resize:vertical;
-
-  outline:none;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:15px;
-
-  background:#020805;
-
-  color:var(--text);
-
-  font:
-  16px monospace;
-
-}
-
-
-textarea:focus{
-
-  border-color:
-  var(--green);
-
-  box-shadow:
-  0 0 20px
-  rgba(32,255,154,.10);
-
-}
-
-
-/* Buttons */
-
-.buttons{
-
-  display:flex;
-
-  gap:10px;
-
-  margin-top:12px;
-
-}
-
-
-button{
-
-  flex:1;
-
-  padding:13px 16px;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:13px;
-
-  background:#0b1d15;
-
-  color:var(--text);
-
-  font-weight:800;
-
-  cursor:pointer;
-
-  transition:.2s;
-
-}
-
-
-button:hover{
-
-  border-color:
-  var(--green);
-
-  transform:
-  translateY(-1px);
-
-  box-shadow:
-  0 0 20px
-  rgba(32,255,154,.08);
-
-}
-
-
-/* Token */
-
-.token{
-
-  margin-top:18px;
-
-  padding:19px;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:17px;
-
-  background:
-  rgba(1,8,5,.75);
-
-}
-
-
-.token-head{
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-}
-
-
-.timer{
-
-  color:var(--green);
-
-  font:
-  800 12px monospace;
-
-}
-
-
-/* Code */
-
-.code{
-
-  margin:16px 0;
-
-  min-height:55px;
-
-  text-align:center;
-
-  color:#eafff6;
-
-  font:
-  900 42px monospace;
-
-  letter-spacing:9px;
-
-  text-shadow:
-  0 0 18px
-  rgba(32,255,154,.55);
-
-}
-
-
-.bar{
-
-  height:8px;
-
-  overflow:hidden;
-
-  border-radius:20px;
-
-  background:#06110c;
-
-}
-
-
-.bar span{
-
-  display:block;
-
-  height:100%;
-
-  width:100%;
-
-  transform-origin:left;
-
-  background:
-  linear-gradient(
-    90deg,
-    #00a968,
-    #2dffac
-  );
-
-  box-shadow:
-  0 0 15px
-  rgba(32,255,154,.5);
-
-  transition:
-  width 1s linear;
-
-}
-
-
-.meta{
-
-  display:flex;
-
-  justify-content:space-between;
-
-  margin-top:8px;
-
-  color:var(--muted);
-
-  font:
-  11px monospace;
-
-}
-
-
-/* Copy */
-
-.copy{
-
-  width:100%;
-
-  margin-top:14px;
-
-  border:0;
-
-  background:
-  linear-gradient(
-    90deg,
-    #00c878,
-    #20ff9a,
-    #00c878
-  );
-
-  color:#001b10;
-
-  font-size:16px;
-
-}
-
-
-/* TikTok */
-
-.tiktok{
-
-  display:block;
-
-  margin-top:20px;
-
-  padding:14px;
-
-  text-align:center;
-
-  text-decoration:none;
-
-  border:
-  1px solid
-  rgba(255,255,255,.12);
-
-  border-radius:14px;
-
-  background:#090f0c;
-
-  color:#fff;
-
-  font-weight:800;
-
-  transition:.2s;
-
-}
-
-
-.tiktok:hover{
-
-  border-color:
-  var(--green);
-
-  box-shadow:
-  0 0 20px
-  rgba(32,255,154,.10);
-
-}
-
-
-/* Install */
-
-.install{
-
-  display:none;
-
-  width:100%;
-
-  margin-top:12px;
-
-  border:0;
-
-  background:
-  linear-gradient(
-    90deg,
-    #087b50,
-    #20ff9a
-  );
-
-  color:#001b10;
-
-}
-
-
-/* Note */
-
-.note{
-
-  margin-top:15px;
-
-  color:var(--muted);
-
-  font-size:12px;
-
-  line-height:1.5;
-
-}
-
-
-/* Toast */
-
-.toast{
-
-  position:fixed;
-
-  left:50%;
-
-  bottom:25px;
-
-  transform:
-  translate(-50%,20px);
-
-  opacity:0;
-
-  padding:12px 18px;
-
-  border:
-  1px solid var(--border);
-
-  border-radius:12px;
-
-  background:#06150e;
-
-  color:#caffea;
-
-  transition:.25s;
-
-  z-index:10000;
-
-}
-
-
-.toast.show{
-
-  opacity:1;
-
-  transform:
-  translate(-50%,0);
-
-}
-
-
-/* Mobile */
-
-@media(max-width:520px){
-
-  .card{
-    padding:16px;
-  }
-
-  .code{
-
-    font-size:31px;
-
-    letter-spacing:6px;
-
-  }
-
-  .buttons{
-
-    flex-direction:column;
-
-  }
-
-}
-
-</style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2FA Live Code</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f172a">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      display: grid; place-items: center;
+      background: #0f172a; color: #e2e8f0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 16px;
+    }
+    main {
+      width: min(560px, 100%);
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+    h1 { margin: 0 0 14px; font-size: 1.4rem; }
+    label { display: block; font-size: .85rem; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"], input[type="number"], select {
+      width: 100%; padding: 12px;
+      border-radius: 12px; border: 1px solid #475569;
+      background: #0f172a; color: #f8fafc;
+      font-size: 1rem; outline: none;
+    }
+    input[type="text"] { letter-spacing: .06em; text-transform: uppercase; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .row label { margin: 0; }
+    .code {
+      margin: 22px 0 8px;
+      text-align: center;
+      font-size: clamp(2.2rem, 10vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: .12em;
+      color: #38bdf8;
+      font-variant-numeric: tabular-nums;
+      min-height: 1.2em;
+    }
+    .progress {
+      height: 8px; background: #0f172a;
+      border-radius: 999px; overflow: hidden;
+      border: 1px solid #334155;
+    }
+    #bar {
+      height: 100%; width: 100%;
+      background: #38bdf8;
+      transition: width .2s linear;
+    }
+    .meta {
+      display: flex; justify-content: space-between;
+      margin-top: 8px; color: #94a3b8; font-size: .9rem;
+    }
+    button {
+      width: 100%; margin-top: 16px;
+      padding: 13px 16px;
+      border: 0; border-radius: 12px;
+      background: #38bdf8; color: #0f172a;
+      font-weight: 700; font-size: 1rem; cursor: pointer;
+    }
+    button:active { transform: translateY(1px); }
+    .hint { margin: 14px 0 0; color: #94a3b8; font-size: .8rem; line-height: 1.5; }
+    .error { color: #f87171; }
+  </style>
 </head>
-
-
 <body>
+  <main>
+    <h1>2FA Live Code</h1>
+    <label for="secret">Base32 Secret</label>
+    <input id="secret" type="text" placeholder="JBSWY3DPEHPK3PXP" autocomplete="off" autocapitalize="characters" spellcheck="false">
 
-
-<div class="container">
-
-
-<header class="header">
-
-  <div class="brand">
-
-    <div class="logo">
-
-      <img
-        src="icon-192.png"
-        alt="2FA">
-
+    <div class="row">
+      <div>
+        <label for="period">Period</label>
+        <input id="period" type="number" value="30" min="1" max="120">
+      </div>
+      <div>
+        <label for="digits">Digits</label>
+        <select id="digits">
+          <option value="6" selected>6</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+      <div>
+        <label for="algorithm">Algorithm</label>
+        <select id="algorithm">
+          <option value="SHA-1" selected>SHA-1</option>
+          <option value="SHA-256">SHA-256</option>
+          <option value="SHA-512">SHA-512</option>
+        </select>
+      </div>
     </div>
 
-    <span>
-      2FA Live Code
-    </span>
-
-  </div>
-
-
-  <div class="live">
-    ● LIVE
-  </div>
-
-</header>
-
-
-<main class="card">
-
-
-<div class="label">
-AUTHENTICATION SECRET KEY
-</div>
-
-
-<textarea
-  id="secret"
-  placeholder="Enter your Base32 secret key..."
-  autocomplete="off"
-  spellcheck="false">
-</textarea>
-
-
-<div class="buttons">
-
-  <button onclick="pasteKey()">
-    ▣ Paste Key
-  </button>
-
-  <button onclick="clearKey()">
-    Clear
-  </button>
-
-</div>
-
-
-<section class="token">
-
-
-<div class="token-head">
-
-  <div class="label">
-    ⚡ ACTIVE TOKEN
-  </div>
-
-  <div
-    class="timer"
-    id="timer">
-    30s
-  </div>
-
-</div>
-
-
-<div
-  class="code"
-  id="code">
-
-  ------
-
-</div>
-
-
-<div class="bar">
-
-  <span
-    id="progress">
-  </span>
-
-</div>
-
-
-<div class="meta">
-
-  <span>
-    LOCAL
-  </span>
-
-  <span id="status">
-    WAITING
-  </span>
-
-  <span>
-    TOTP
-  </span>
-
-</div>
-
-
-<button
-  class="copy"
-  onclick="copyCode()">
-
-  ▣ COPY CODE
-
-</button>
-
-
-<button
-  class="install"
-  id="installBtn"
-  onclick="installApp()">
-
-  📲 INSTALL APP
-
-</button>
-
-
-</section>
-
-
-<a
-  class="tiktok"
-  href="https://www.tiktok.com/@error_game_ar"
-  target="_blank"
-  rel="noopener noreferrer">
-
-  ♪ Follow @error_game_ar on TikTok
-
-</a>
-
-
-<div class="note">
-
-  Your secret key is processed locally
-  in this browser.
-
-  Do not share your 2FA secret key
-  with anyone.
-
-</div>
-
-
-</main>
-
-</div>
-
-
-<div
-  class="toast"
-  id="toast">
-
-  Copied!
-
-</div>
-
-
-
-<script>
-
-
-const alphabet =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-
-
-const secret =
-document.getElementById("secret");
-
-const code =
-document.getElementById("code");
-
-const timer =
-document.getElementById("timer");
-
-const progress =
-document.getElementById("progress");
-
-const statusText =
-document.getElementById("status");
-
-const toast =
-document.getElementById("toast");
-
-
-
-function normalize(value){
-
-  return value
-    .toUpperCase()
-    .replace(/[^A-Z2-7]/g,"");
-
-}
-
-
-
-function base32ToBytes(input){
-
-  let bits=0;
-
-  let value=0;
-
-  let output=[];
-
-
-  for(
-    const char
-    of normalize(input)
-  ){
-
-    const index =
-    alphabet.indexOf(char);
-
-
-    if(index < 0)
-      continue;
-
-
-    value =
-    (value << 5) | index;
-
-    bits += 5;
-
-
-    if(bits >= 8){
-
-      bits -= 8;
-
-      output.push(
-        (value >> bits) & 255
-      );
-
-    }
-
-  }
-
-
-  return new Uint8Array(output);
-
-}
-
-
-
-function counterBytes(number){
-
-  const bytes =
-  new Uint8Array(8);
-
-
-  for(
-    let i=7;
-    i>=0;
-    i--
-  ){
-
-    bytes[i] =
-    number & 255;
-
-    number =
-    Math.floor(number/256);
-
-  }
-
-
-  return bytes;
-
-}
-
-
-
-async function generateTOTP(secretKey){
-
-  const keyBytes =
-  base32ToBytes(secretKey);
-
-
-  if(!keyBytes.length)
-    return null;
-
-
-  const counter =
-  Math.floor(
-    Date.now()/1000/30
-  );
-
-
-  const cryptoKey =
-  await crypto.subtle.importKey(
-
-    "raw",
-
-    keyBytes,
-
-    {
-      name:"HMAC",
-      hash:"SHA-1"
-    },
-
-    false,
-
-    ["sign"]
-
-  );
-
-
-  const hash =
-  new Uint8Array(
-
-    await crypto.subtle.sign(
-
-      "HMAC",
-
-      cryptoKey,
-
-      counterBytes(counter)
-
-    )
-
-  );
-
-
-  const offset =
-  hash[hash.length-1] & 15;
-
-
-  const binary =
-
-    ((hash[offset] & 127) << 24) |
-
-    (hash[offset+1] << 16) |
-
-    (hash[offset+2] << 8) |
-
-    hash[offset+3];
-
-
-  return String(
-    binary % 1000000
-  ).padStart(6,"0");
-
-}
-
-
-
-let previous="";
-
-
-async function update(){
-
-  const key =
-  normalize(secret.value);
-
-
-  const now =
-  Math.floor(
-    Date.now()/1000
-  );
-
-
-  const remaining =
-  30 - (now % 30);
-
-
-  timer.textContent =
-  remaining + "s";
-
-
-  progress.style.width =
-  (remaining/30*100) + "%";
-
-
-  if(!key){
-
-    code.textContent =
-    "------";
-
-    statusText.textContent =
-    "WAITING";
-
-    previous="";
-
-    return;
-
-  }
-
-
-  try{
-
-    const result =
-    await generateTOTP(key);
-
-
-    if(result){
-
-      if(result !== previous){
-
-        code.textContent =
-        result;
-
-
-        code.animate(
-
-          [
-            {
-              transform:"scale(1)"
-            },
-
-            {
-              transform:"scale(1.06)"
-            },
-
-            {
-              transform:"scale(1)"
-            }
-
-          ],
-
-          {
-            duration:250
-          }
-
-        );
-
-
-        previous =
-        result;
-
+    <div class="code" id="code">------</div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="meta">
+      <span id="time">--s</span>
+      <span id="status"></span>
+    </div>
+
+    <button id="copy" type="button">Copy Code</button>
+    <p class="hint">সিক্রেট শুধু আপনার ব্রাউজারেই থাকে। কোনো সার্ভারে পাঠানো হয় না। প্রথমবার লোড হওয়ার পর অফলাইনেও কাজ করবে।</p>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const secretInput = $('secret');
+    const periodInput = $('period');
+    const digitsSelect = $('digits');
+    const algorithmSelect = $('algorithm');
+    const codeEl = $('code');
+    const timeEl = $('time');
+    const barEl = $('bar');
+    const statusEl = $('status');
+    const copyBtn = $('copy');
+
+    let currentCode = '';
+    let updating = false;
+
+    // ✅ FIX: Base32 ডিকোডিং
+    function base32ToBytes(base32) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      const clean = String(base32 || '')
+        .replace(/=+$/g, '')
+        .replace(/\s+/g, '')
+        .toUpperCase();
+
+      if (!clean) throw new Error('সিক্রেট খালি');
+
+      let bits = 0;
+      let value = 0;
+      const output = [];
+
+      for (const ch of clean) {
+        const idx = alphabet.indexOf(ch);
+        if (idx === -1) throw new Error('ভুল Base32 অক্ষর: ' + ch);
+
+        value = (value << 5) | idx;
+        bits += 5;
+
+        if (bits >= 8) {
+          bits -= 8;
+          output.push((value >>> bits) & 0xff);
+          value &= (1 << bits) - 1; // 🔴 গুরুত্বপূর্ণ ফিক্স
+        }
       }
 
-
-      statusText.textContent =
-      "SYNC OK";
-
+      return new Uint8Array(output);
     }
 
+    async function generateTOTP(secret, period = 30, digits = 6, algorithm = 'SHA-1') {
+      const keyBytes = base32ToBytes(secret);
+      const counter = BigInt(Math.floor(Date.now() / 1000 / period));
 
-  }catch(error){
+      const buffer = new ArrayBuffer(8);
+      const view = new DataView(buffer);
+      view.setBigUint64(0, counter, false);
 
-    code.textContent =
-    "ERROR";
+      const cryptoKey = await crypto.subtle.importKey(
+        'raw',
+        keyBytes,
+        { name: 'HMAC', hash: algorithm },
+        false,
+        ['sign']
+      );
 
-    statusText.textContent =
-    "INVALID KEY";
+      const signature = await crypto.subtle.sign('HMAC', cryptoKey, buffer);
+      const hmac = new Uint8Array(signature);
+      const offset = hmac[hmac.length - 1] & 0x0f;
 
-  }
+      const binary =
+        ((hmac[offset] & 0x7f) << 24) |
+        ((hmac[offset + 1] & 0xff) << 16) |
+        ((hmac[offset + 2] & 0xff) << 8) |
+        (hmac[offset + 3] & 0xff);
 
-}
+      const otp = binary % (10 ** digits);
+      return String(otp).padStart(digits, '0');
+    }
 
+    async function update() {
+      if (updating) return;
+      updating = true;
 
+      try {
+        const secret = secretInput.value.trim();
+        const period = Math.max(1, Number(periodInput.value) || 30);
+        const digits = Number(digitsSelect.value) || 6;
+        const algorithm = algorithmSelect.value;
 
-async function pasteKey(){
+        if (!secret) {
+          currentCode = '';
+          codeEl.textContent = '------';
+          timeEl.textContent = '--s';
+          barEl.style.width = '100%';
+          statusEl.textContent = '';
+          return;
+        }
 
-  try{
+        const code = await generateTOTP(secret, period, digits, algorithm);
+        currentCode = code;
+        codeEl.textContent = code;
+        codeEl.classList.remove('error');
 
-    secret.value =
-    await navigator.clipboard.readText();
+        const now = Math.floor(Date.now() / 1000);
+        const remaining = period - (now % period);
+        timeEl.textContent = remaining + 's';
+        barEl.style.width = ((remaining / period) * 100) + '%';
+        statusEl.textContent = '';
+      } catch (err) {
+        currentCode = '';
+        codeEl.textContent = 'ERROR';
+        codeEl.classList.add('error');
+        timeEl.textContent = '--s';
+        barEl.style.width = '0%';
+        statusEl.textContent = err.message;
+      } finally {
+        updating = false;
+      }
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      if (!currentCode) return;
+      try {
+        await navigator.clipboard.writeText(currentCode);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => (copyBtn.textContent = 'Copy Code'), 1200);
+      } catch {
+        copyBtn.textContent = 'Copy failed';
+        setTimeout(() => (copyBtn.textContent = 'Copy Code'), 1200);
+      }
+    });
+
+    secretInput.addEventListener('input', update);
+    periodInput.addEventListener('input', update);
+    digitsSelect.addEventListener('change', update);
+    algorithmSelect.addEventListener('change', update);
 
     update();
+    setInterval(update, 1000);
 
-    showToast(
-      "Key pasted"
-    );
-
-  }catch{
-
-    showToast(
-      "Clipboard unavailable"
-    );
-
-  }
-
-}
-
-
-
-function clearKey(){
-
-  secret.value="";
-
-  previous="";
-
-  update();
-
-}
-
-
-
-async function copyCode(){
-
-  const value =
-  code.textContent;
-
-
-  if(!/^\d{6}$/.test(value)){
-
-    showToast(
-      "No active code"
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    await navigator.clipboard.writeText(
-      value
-    );
-
-    showToast(
-      "Code copied ✓"
-    );
-
-  }catch{
-
-    showToast(
-      "Copy failed"
-    );
-
-  }
-
-}
-
-
-
-function showToast(message){
-
-  toast.textContent =
-  message;
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  setTimeout(
-
-    () =>
-    toast.classList.remove(
-      "show"
-    ),
-
-    1500
-
-  );
-
-}
-
-
-
-/* PWA Service Worker */
-
-if(
-  "serviceWorker"
-  in navigator
-){
-
-  window.addEventListener(
-    "load",
-    () => {
-
-      navigator.serviceWorker
-      .register("./sw.js")
-      .then(() => {
-
-        console.log(
-          "2FA PWA ready"
-        );
-
-      })
-      .catch(error => {
-
-        console.log(
-          "Service Worker error:",
-          error
-        );
-
+    // ✅ FIX: অফলাইন PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
       });
-
     }
-  );
-
-}
-
-
-
-/* Install App */
-
-let deferredPrompt;
-
-const installBtn =
-document.getElementById(
-  "installBtn"
-);
-
-
-window.addEventListener(
-  "beforeinstallprompt",
-  event => {
-
-    event.preventDefault();
-
-    deferredPrompt =
-    event;
-
-    installBtn.style.display =
-    "block";
-
-  }
-);
-
-
-async function installApp(){
-
-  if(!deferredPrompt){
-
-    showToast(
-      "Use browser menu → Install app"
-    );
-
-    return;
-
-  }
-
-
-  deferredPrompt.prompt();
-
-  await deferredPrompt.userChoice;
-
-  deferredPrompt=null;
-
-  installBtn.style.display =
-  "none";
-
-}
-
-
-
-/* Start */
-
-secret.addEventListener(
-  "input",
-  update
-);
-
-
-update();
-
-
-setInterval(
-  update,
-  1000
-);
-
-</script>
-
-
+  </script>
 </body>
 </html>
