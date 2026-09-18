@@ -6,75 +6,361 @@
   <title>2FA Live Code</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#04120a">
   <style>
-    :root { color-scheme: dark; }
+    :root {
+      color-scheme: dark;
+      --bg-0: #030b07;
+      --bg-1: #06170f;
+      --bg-2: #08241a;
+      --panel: rgba(6, 26, 18, 0.72);
+      --border: rgba(0, 255, 140, 0.22);
+      --border-strong: rgba(0, 255, 140, 0.55);
+      --green: #00ff9c;
+      --green-dim: #16c47f;
+      --green-deep: #067a4a;
+      --text: #c9ffe4;
+      --muted: #5fbf94;
+      --danger: #ff5470;
+      --glow: 0 0 12px rgba(0, 255, 156, 0.55), 0 0 40px rgba(0, 255, 156, 0.15);
+    }
+
     * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
     body {
-      margin: 0; min-height: 100vh;
-      display: grid; place-items: center;
-      background: #0f172a; color: #e2e8f0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      padding: 16px;
-    }
-    main {
-      width: min(560px, 100%);
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       padding: 22px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      color: var(--text);
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(0, 255, 140, 0.10), transparent 60%),
+        radial-gradient(900px 500px at 100% 100%, rgba(0, 255, 140, 0.06), transparent 65%),
+        linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+      position: relative;
+      overflow-x: hidden;
     }
-    h1 { margin: 0 0 14px; font-size: 1.4rem; }
-    label { display: block; font-size: .85rem; color: #94a3b8; margin-bottom: 6px; }
-    input[type="text"], input[type="number"], select {
-      width: 100%; padding: 12px;
-      border-radius: 12px; border: 1px solid #475569;
-      background: #0f172a; color: #f8fafc;
-      font-size: 1rem; outline: none;
+
+    /* ম্যাট্রিক্স গ্রিড + স্ক্যানলাইন ওভারলে */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 255, 140, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 140, 0.05) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(circle at 50% 40%, black 40%, transparent 85%);
+      pointer-events: none;
+      z-index: 0;
     }
-    input[type="text"] { letter-spacing: .06em; text-transform: uppercase; }
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-    .row label { margin: 0; }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.18) 3px,
+        rgba(0, 0, 0, 0) 4px
+      );
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 1;
+      animation: scan 8s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(6px); }
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      width: min(600px, 100%);
+      padding: 26px 24px 22px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      box-shadow:
+        0 0 0 1px rgba(0, 255, 140, 0.05) inset,
+        0 30px 80px rgba(0, 0, 0, 0.65),
+        0 0 60px rgba(0, 255, 140, 0.10);
+      overflow: hidden;
+    }
+
+    /* কর্নার ব্র্যাকেট */
+    main::before,
+    main::after {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border: 2px solid var(--green);
+      filter: drop-shadow(0 0 6px rgba(0, 255, 140, 0.8));
+      pointer-events: none;
+    }
+    main::before {
+      top: 8px; left: 8px;
+      border-right: none; border-bottom: none;
+      border-top-left-radius: 8px;
+    }
+    main::after {
+      bottom: 8px; right: 8px;
+      border-left: none; border-top: none;
+      border-bottom-right-radius: 8px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 1.15rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green);
+      text-shadow: var(--glow);
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subtitle::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.75); }
+    }
+
+    label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(0, 20, 12, 0.75);
+      color: var(--green);
+      font-family: inherit;
+      font-size: 0.98rem;
+      letter-spacing: 0.06em;
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    input::placeholder { color: rgba(95, 191, 148, 0.45); }
+
+    input[type="text"] { text-transform: uppercase; }
+
+    input:focus,
+    select:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(0, 255, 140, 0.12), 0 0 20px rgba(0, 255, 140, 0.25);
+      background: rgba(0, 30, 18, 0.9);
+    }
+
+    select {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--green) 50%),
+        linear-gradient(135deg, var(--green) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    /* কোড ডিসপ্লে */
+    .code-wrap {
+      margin: 24px 0 12px;
+      padding: 20px 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background:
+        radial-gradient(120% 120% at 50% 0%, rgba(0, 255, 140, 0.10), transparent 60%),
+        rgba(0, 12, 7, 0.75);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .code-wrap::before {
+      content: "LIVE";
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--danger);
+      text-shadow: 0 0 8px rgba(255, 84, 112, 0.85);
+    }
+    .code-wrap::after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      right: 42px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 10px var(--danger);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
     .code {
-      margin: 22px 0 8px;
       text-align: center;
-      font-size: clamp(2.2rem, 10vw, 3.6rem);
+      font-size: clamp(2.3rem, 10vw, 3.8rem);
       font-weight: 800;
-      letter-spacing: .12em;
-      color: #38bdf8;
+      letter-spacing: 0.18em;
+      color: var(--green);
+      text-shadow:
+        0 0 8px rgba(0, 255, 140, 0.85),
+        0 0 26px rgba(0, 255, 140, 0.45),
+        0 0 60px rgba(0, 255, 140, 0.20);
       font-variant-numeric: tabular-nums;
-      min-height: 1.2em;
+      min-height: 1.15em;
+      user-select: all;
+      animation: flicker 5s infinite;
     }
+
+    @keyframes flicker {
+      0%, 96%, 100% { opacity: 1; }
+      97% { opacity: 0.75; }
+      98% { opacity: 1; }
+      99% { opacity: 0.85; }
+    }
+
+    .code.error {
+      color: var(--danger);
+      text-shadow: 0 0 10px rgba(255, 84, 112, 0.9);
+    }
+
     .progress {
-      height: 8px; background: #0f172a;
-      border-radius: 999px; overflow: hidden;
-      border: 1px solid #334155;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(0, 40, 25, 0.9);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
     }
+
     #bar {
-      height: 100%; width: 100%;
-      background: #38bdf8;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--green-deep), var(--green), var(--green-deep));
+      background-size: 200% 100%;
+      box-shadow: 0 0 14px rgba(0, 255, 140, 0.7);
       transition: width .2s linear;
+      animation: flow 2.4s linear infinite;
     }
+
+    @keyframes flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
     .meta {
-      display: flex; justify-content: space-between;
-      margin-top: 8px; color: #94a3b8; font-size: .9rem;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
+
     button {
-      width: 100%; margin-top: 16px;
-      padding: 13px 16px;
-      border: 0; border-radius: 12px;
-      background: #38bdf8; color: #0f172a;
-      font-weight: 700; font-size: 1rem; cursor: pointer;
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(0, 255, 140, 0.18), rgba(0, 255, 140, 0.05));
+      color: var(--green);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .18s ease;
+      box-shadow:
+        0 0 0 1px rgba(0, 255, 140, 0.15) inset,
+        0 0 20px rgba(0, 255, 140, 0.20);
     }
-    button:active { transform: translateY(1px); }
-    .hint { margin: 14px 0 0; color: #94a3b8; font-size: .8rem; line-height: 1.5; }
-    .error { color: #f87171; }
+
+    button:hover {
+      background: linear-gradient(180deg, rgba(0, 255, 140, 0.28), rgba(0, 255, 140, 0.10));
+      box-shadow:
+        0 0 0 1px rgba(0, 255, 140, 0.35) inset,
+        0 0 30px rgba(0, 255, 140, 0.45);
+      transform: translateY(-1px);
+    }
+
+    button:active { transform: translateY(0); }
+
+    .hint {
+      margin: 14px 0 0;
+      font-size: 0.7rem;
+      line-height: 1.6;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    .hint::before {
+      content: "> ";
+      color: var(--green);
+    }
+
+    @media (max-width: 420px) {
+      .row { grid-template-columns: 1fr 1fr; }
+      .row > div:last-child { grid-column: span 2; }
+    }
   </style>
 </head>
 <body>
   <main>
     <h1>2FA Live Code</h1>
+    <p class="subtitle">secure · offline · TOTP generator</p>
+
     <label for="secret">Base32 Secret</label>
     <input id="secret" type="text" placeholder="JBSWY3DPEHPK3PXP" autocomplete="off" autocapitalize="characters" spellcheck="false">
 
@@ -100,7 +386,10 @@
       </div>
     </div>
 
-    <div class="code" id="code">------</div>
+    <div class="code-wrap">
+      <div class="code" id="code">------</div>
+    </div>
+
     <div class="progress"><div id="bar"></div></div>
     <div class="meta">
       <span id="time">--s</span>
@@ -108,7 +397,7 @@
     </div>
 
     <button id="copy" type="button">Copy Code</button>
-    <p class="hint">সিক্রেট শুধু আপনার ব্রাউজারেই থাকে। কোনো সার্ভারে পাঠানো হয় না। প্রথমবার লোড হওয়ার পর অফলাইনেও কাজ করবে।</p>
+    <p class="hint">সিক্রেট শুধু আপনার ব্রাউজারেই থাকে · কোনো সার্ভারে যায় না · প্রথমবার লোডের পর অফলাইনেও চলে।</p>
   </main>
 
   <script>
@@ -126,7 +415,6 @@
     let currentCode = '';
     let updating = false;
 
-    // ✅ FIX: Base32 ডিকোডিং
     function base32ToBytes(base32) {
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
       const clean = String(base32 || '')
@@ -150,10 +438,9 @@
         if (bits >= 8) {
           bits -= 8;
           output.push((value >>> bits) & 0xff);
-          value &= (1 << bits) - 1; // 🔴 গুরুত্বপূর্ণ ফিক্স
+          value &= (1 << bits) - 1;
         }
       }
-
       return new Uint8Array(output);
     }
 
@@ -166,11 +453,9 @@
       view.setBigUint64(0, counter, false);
 
       const cryptoKey = await crypto.subtle.importKey(
-        'raw',
-        keyBytes,
+        'raw', keyBytes,
         { name: 'HMAC', hash: algorithm },
-        false,
-        ['sign']
+        false, ['sign']
       );
 
       const signature = await crypto.subtle.sign('HMAC', cryptoKey, buffer);
@@ -190,7 +475,6 @@
     async function update() {
       if (updating) return;
       updating = true;
-
       try {
         const secret = secretInput.value.trim();
         const period = Math.max(1, Number(periodInput.value) || 30);
@@ -200,6 +484,7 @@
         if (!secret) {
           currentCode = '';
           codeEl.textContent = '------';
+          codeEl.classList.remove('error');
           timeEl.textContent = '--s';
           barEl.style.width = '100%';
           statusEl.textContent = '';
@@ -248,7 +533,6 @@
     update();
     setInterval(update, 1000);
 
-    // ✅ FIX: অফলাইন PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(console.error);
