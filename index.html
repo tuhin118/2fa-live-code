@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
+
 <title>2FA Live Code</title>
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#020806">
+
+<meta name="mobile-web-app-capable"
+      content="yes">
+
+<meta name="apple-mobile-web-app-capable"
+      content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent">
+
+<meta name="apple-mobile-web-app-title"
+      content="2FA Live Code">
+
+<!-- App Icons -->
+<link rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="icon-192.png">
+
+<link rel="apple-touch-icon"
+      sizes="192x192"
+      href="icon-192.png">
+
+
 <style>
+
 :root{
   --bg:#020806;
   --card:#07140f;
@@ -16,568 +49,1278 @@
   --border:rgba(32,255,154,.18);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
   min-height:100vh;
   color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+
+  font-family:
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  sans-serif;
+
   background:
-    radial-gradient(circle at 50% 0%,rgba(0,255,145,.15),transparent 40%),
-    linear-gradient(rgba(32,255,154,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(32,255,154,.025) 1px,transparent 1px),
-    var(--bg);
-  background-size:auto,32px 32px,32px 32px;
+
+  radial-gradient(
+    circle at 50% 0%,
+    rgba(0,255,145,.16),
+    transparent 40%
+  ),
+
+  linear-gradient(
+    rgba(32,255,154,.025) 1px,
+    transparent 1px
+  ),
+
+  linear-gradient(
+    90deg,
+    rgba(32,255,154,.025) 1px,
+    transparent 1px
+  ),
+
+  var(--bg);
+
+  background-size:
+  auto,
+  32px 32px,
+  32px 32px;
+
+  overflow-x:hidden;
 }
 
+
+/* Hacker Scanline */
+
 body:after{
+
   content:"";
+
   position:fixed;
+
   inset:0;
+
   pointer-events:none;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
     transparent 50%,
     rgba(32,255,154,.025) 50%
   );
-  background-size:100% 4px;
+
+  background-size:
+  100% 4px;
+
+  z-index:9999;
+
 }
+
+
+/* Main */
 
 .container{
+
   width:min(680px,94%);
-  margin:25px auto 45px;
+
+  margin:
+  25px auto
+  45px;
+
 }
+
+
+/* Header */
 
 .header{
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   padding:15px 18px;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:18px;
-  background:rgba(7,20,15,.88);
-  box-shadow:0 0 35px rgba(0,255,145,.06);
+
+  background:
+  rgba(7,20,15,.90);
+
+  backdrop-filter:
+  blur(15px);
+
+  box-shadow:
+  0 0 35px
+  rgba(0,255,145,.07);
+
 }
+
 
 .brand{
+
   display:flex;
+
   align-items:center;
+
   gap:12px;
+
   font-size:20px;
+
   font-weight:800;
+
 }
+
 
 .logo{
+
   width:42px;
+
   height:42px;
+
   display:grid;
+
   place-items:center;
+
   border-radius:13px;
-  color:#00180e;
-  background:linear-gradient(135deg,#5affbb,#00a96c);
-  box-shadow:0 0 25px rgba(32,255,154,.3);
+
+  overflow:hidden;
+
+  background:#020806;
+
+  box-shadow:
+  0 0 25px
+  rgba(32,255,154,.30);
+
 }
+
+
+.logo img{
+
+  width:100%;
+
+  height:100%;
+
+  object-fit:cover;
+
+}
+
 
 .live{
+
   color:var(--green);
-  font:700 11px monospace;
+
+  font:
+  700 11px monospace;
+
   letter-spacing:1px;
+
 }
 
+
+/* Card */
+
 .card{
+
   margin-top:18px;
+
   padding:22px;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:22px;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
     180deg,
     rgba(10,29,21,.96),
     rgba(4,14,10,.98)
   );
-  box-shadow:0 20px 70px rgba(0,0,0,.4);
+
+  box-shadow:
+  0 20px 70px
+  rgba(0,0,0,.40);
+
 }
+
 
 .label{
+
   margin-bottom:10px;
+
   color:var(--green);
-  font:800 12px monospace;
+
+  font:
+  800 12px monospace;
+
   letter-spacing:1.5px;
+
 }
+
+
+/* Input */
 
 textarea{
+
   width:100%;
+
   min-height:110px;
+
   padding:16px;
+
   resize:vertical;
+
   outline:none;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:15px;
+
   background:#020805;
+
   color:var(--text);
-  font:16px monospace;
+
+  font:
+  16px monospace;
+
 }
+
 
 textarea:focus{
-  border-color:var(--green);
-  box-shadow:0 0 20px rgba(32,255,154,.08);
+
+  border-color:
+  var(--green);
+
+  box-shadow:
+  0 0 20px
+  rgba(32,255,154,.10);
+
 }
+
+
+/* Buttons */
 
 .buttons{
+
   display:flex;
+
   gap:10px;
+
   margin-top:12px;
+
 }
+
 
 button{
+
   flex:1;
+
   padding:13px 16px;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:13px;
+
   background:#0b1d15;
+
   color:var(--text);
+
   font-weight:800;
+
   cursor:pointer;
+
   transition:.2s;
+
 }
+
 
 button:hover{
-  border-color:var(--green);
-  transform:translateY(-1px);
+
+  border-color:
+  var(--green);
+
+  transform:
+  translateY(-1px);
+
+  box-shadow:
+  0 0 20px
+  rgba(32,255,154,.08);
+
 }
+
+
+/* Token */
 
 .token{
+
   margin-top:18px;
+
   padding:19px;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:17px;
-  background:rgba(1,8,5,.75);
+
+  background:
+  rgba(1,8,5,.75);
+
 }
+
 
 .token-head{
+
   display:flex;
+
   justify-content:space-between;
+
+  align-items:center;
+
 }
+
 
 .timer{
+
   color:var(--green);
-  font:800 12px monospace;
+
+  font:
+  800 12px monospace;
+
 }
+
+
+/* Code */
 
 .code{
+
   margin:16px 0;
-  text-align:center;
+
   min-height:55px;
+
+  text-align:center;
+
   color:#eafff6;
-  font:900 42px monospace;
+
+  font:
+  900 42px monospace;
+
   letter-spacing:9px;
-  text-shadow:0 0 18px rgba(32,255,154,.55);
+
+  text-shadow:
+  0 0 18px
+  rgba(32,255,154,.55);
+
 }
+
 
 .bar{
+
   height:8px;
+
   overflow:hidden;
+
   border-radius:20px;
+
   background:#06110c;
+
 }
 
+
 .bar span{
+
   display:block;
+
   height:100%;
+
   width:100%;
+
   transform-origin:left;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
     90deg,
     #00a968,
     #2dffac
   );
-  box-shadow:0 0 15px rgba(32,255,154,.5);
-  transition:width 1s linear;
+
+  box-shadow:
+  0 0 15px
+  rgba(32,255,154,.5);
+
+  transition:
+  width 1s linear;
+
 }
+
 
 .meta{
+
   display:flex;
+
   justify-content:space-between;
+
   margin-top:8px;
+
   color:var(--muted);
-  font:11px monospace;
+
+  font:
+  11px monospace;
+
 }
 
+
+/* Copy */
+
 .copy{
+
   width:100%;
+
   margin-top:14px;
+
   border:0;
-  background:linear-gradient(
+
+  background:
+  linear-gradient(
     90deg,
     #00c878,
     #20ff9a,
     #00c878
   );
+
   color:#001b10;
+
   font-size:16px;
+
 }
+
+
+/* TikTok */
 
 .tiktok{
+
   display:block;
+
   margin-top:20px;
+
   padding:14px;
+
   text-align:center;
+
   text-decoration:none;
-  border:1px solid rgba(255,255,255,.12);
+
+  border:
+  1px solid
+  rgba(255,255,255,.12);
+
   border-radius:14px;
+
   background:#090f0c;
+
   color:#fff;
+
   font-weight:800;
+
   transition:.2s;
+
 }
+
 
 .tiktok:hover{
-  border-color:var(--green);
-  box-shadow:0 0 20px rgba(32,255,154,.1);
+
+  border-color:
+  var(--green);
+
+  box-shadow:
+  0 0 20px
+  rgba(32,255,154,.10);
+
 }
+
+
+/* Install */
+
+.install{
+
+  display:none;
+
+  width:100%;
+
+  margin-top:12px;
+
+  border:0;
+
+  background:
+  linear-gradient(
+    90deg,
+    #087b50,
+    #20ff9a
+  );
+
+  color:#001b10;
+
+}
+
+
+/* Note */
 
 .note{
+
   margin-top:15px;
+
   color:var(--muted);
+
   font-size:12px;
+
   line-height:1.5;
+
 }
+
+
+/* Toast */
 
 .toast{
+
   position:fixed;
+
   left:50%;
+
   bottom:25px;
-  transform:translate(-50%,20px);
+
+  transform:
+  translate(-50%,20px);
+
   opacity:0;
+
   padding:12px 18px;
-  border:1px solid var(--border);
+
+  border:
+  1px solid var(--border);
+
   border-radius:12px;
+
   background:#06150e;
+
   color:#caffea;
+
   transition:.25s;
+
+  z-index:10000;
+
 }
+
 
 .toast.show{
+
   opacity:1;
-  transform:translate(-50%,0);
+
+  transform:
+  translate(-50%,0);
+
 }
 
+
+/* Mobile */
+
 @media(max-width:520px){
-  .card{padding:16px}
+
+  .card{
+    padding:16px;
+  }
+
   .code{
+
     font-size:31px;
+
     letter-spacing:6px;
+
   }
+
   .buttons{
+
     flex-direction:column;
+
   }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
+
 <header class="header">
+
   <div class="brand">
-    <div class="logo">⌁</div>
-    <span>2FA Live Code</span>
+
+    <div class="logo">
+
+      <img
+        src="icon-192.png"
+        alt="2FA">
+
+    </div>
+
+    <span>
+      2FA Live Code
+    </span>
+
   </div>
-  <div class="live">● LIVE</div>
+
+
+  <div class="live">
+    ● LIVE
+  </div>
+
 </header>
 
+
 <main class="card">
+
 
 <div class="label">
 AUTHENTICATION SECRET KEY
 </div>
 
+
 <textarea
   id="secret"
   placeholder="Enter your Base32 secret key..."
   autocomplete="off"
-  spellcheck="false"></textarea>
+  spellcheck="false">
+</textarea>
+
 
 <div class="buttons">
-  <button onclick="pasteKey()">▣ Paste Key</button>
-  <button onclick="clearKey()">Clear</button>
+
+  <button onclick="pasteKey()">
+    ▣ Paste Key
+  </button>
+
+  <button onclick="clearKey()">
+    Clear
+  </button>
+
 </div>
+
 
 <section class="token">
 
+
 <div class="token-head">
-  <div class="label">⚡ ACTIVE TOKEN</div>
-  <div class="timer" id="timer">30s</div>
+
+  <div class="label">
+    ⚡ ACTIVE TOKEN
+  </div>
+
+  <div
+    class="timer"
+    id="timer">
+    30s
+  </div>
+
 </div>
 
-<div class="code" id="code">------</div>
+
+<div
+  class="code"
+  id="code">
+
+  ------
+
+</div>
+
 
 <div class="bar">
-  <span id="progress"></span>
+
+  <span
+    id="progress">
+  </span>
+
 </div>
+
 
 <div class="meta">
-  <span>LOCAL</span>
-  <span id="status">WAITING</span>
-  <span>TOTP</span>
+
+  <span>
+    LOCAL
+  </span>
+
+  <span id="status">
+    WAITING
+  </span>
+
+  <span>
+    TOTP
+  </span>
+
 </div>
 
-<button class="copy" onclick="copyCode()">
+
+<button
+  class="copy"
+  onclick="copyCode()">
+
   ▣ COPY CODE
+
 </button>
 
+
+<button
+  class="install"
+  id="installBtn"
+  onclick="installApp()">
+
+  📲 INSTALL APP
+
+</button>
+
+
 </section>
+
 
 <a
   class="tiktok"
   href="https://www.tiktok.com/@error_game_ar"
   target="_blank"
-  rel="noopener noreferrer"
->
+  rel="noopener noreferrer">
+
   ♪ Follow @error_game_ar on TikTok
+
 </a>
 
+
 <div class="note">
-  Your secret key is processed locally in this browser.
-  Do not share your 2FA secret key with anyone.
+
+  Your secret key is processed locally
+  in this browser.
+
+  Do not share your 2FA secret key
+  with anyone.
+
 </div>
+
 
 </main>
+
 </div>
 
-<div class="toast" id="toast">
-Copied!
+
+<div
+  class="toast"
+  id="toast">
+
+  Copied!
+
 </div>
+
+
 
 <script>
 
-const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
-const secret=document.getElementById("secret");
-const code=document.getElementById("code");
-const timer=document.getElementById("timer");
-const progress=document.getElementById("progress");
-const statusText=document.getElementById("status");
-const toast=document.getElementById("toast");
+const alphabet =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+
+const secret =
+document.getElementById("secret");
+
+const code =
+document.getElementById("code");
+
+const timer =
+document.getElementById("timer");
+
+const progress =
+document.getElementById("progress");
+
+const statusText =
+document.getElementById("status");
+
+const toast =
+document.getElementById("toast");
+
+
 
 function normalize(value){
+
   return value
     .toUpperCase()
     .replace(/[^A-Z2-7]/g,"");
+
 }
+
+
 
 function base32ToBytes(input){
 
   let bits=0;
+
   let value=0;
+
   let output=[];
 
-  for(const char of normalize(input)){
 
-    const index=alphabet.indexOf(char);
+  for(
+    const char
+    of normalize(input)
+  ){
 
-    if(index<0) continue;
+    const index =
+    alphabet.indexOf(char);
 
-    value=(value<<5)|index;
-    bits+=5;
 
-    if(bits>=8){
+    if(index < 0)
+      continue;
 
-      bits-=8;
+
+    value =
+    (value << 5) | index;
+
+    bits += 5;
+
+
+    if(bits >= 8){
+
+      bits -= 8;
 
       output.push(
-        (value>>bits)&255
+        (value >> bits) & 255
       );
+
     }
+
   }
 
+
   return new Uint8Array(output);
+
 }
+
+
 
 function counterBytes(number){
 
-  const bytes=new Uint8Array(8);
+  const bytes =
+  new Uint8Array(8);
 
-  for(let i=7;i>=0;i--){
 
-    bytes[i]=number&255;
-    number=Math.floor(number/256);
+  for(
+    let i=7;
+    i>=0;
+    i--
+  ){
+
+    bytes[i] =
+    number & 255;
+
+    number =
+    Math.floor(number/256);
+
   }
 
+
   return bytes;
+
 }
+
+
 
 async function generateTOTP(secretKey){
 
-  const keyBytes=base32ToBytes(secretKey);
+  const keyBytes =
+  base32ToBytes(secretKey);
+
 
   if(!keyBytes.length)
     return null;
 
-  const counter=Math.floor(
+
+  const counter =
+  Math.floor(
     Date.now()/1000/30
   );
 
-  const cryptoKey=
-    await crypto.subtle.importKey(
-      "raw",
-      keyBytes,
-      {
-        name:"HMAC",
-        hash:"SHA-1"
-      },
-      false,
-      ["sign"]
-    );
 
-  const hash=
-    new Uint8Array(
-      await crypto.subtle.sign(
-        "HMAC",
-        cryptoKey,
-        counterBytes(counter)
-      )
-    );
+  const cryptoKey =
+  await crypto.subtle.importKey(
 
-  const offset=
-    hash[hash.length-1]&15;
+    "raw",
 
-  const binary=
-    ((hash[offset]&127)<<24) |
-    (hash[offset+1]<<16) |
-    (hash[offset+2]<<8) |
+    keyBytes,
+
+    {
+      name:"HMAC",
+      hash:"SHA-1"
+    },
+
+    false,
+
+    ["sign"]
+
+  );
+
+
+  const hash =
+  new Uint8Array(
+
+    await crypto.subtle.sign(
+
+      "HMAC",
+
+      cryptoKey,
+
+      counterBytes(counter)
+
+    )
+
+  );
+
+
+  const offset =
+  hash[hash.length-1] & 15;
+
+
+  const binary =
+
+    ((hash[offset] & 127) << 24) |
+
+    (hash[offset+1] << 16) |
+
+    (hash[offset+2] << 8) |
+
     hash[offset+3];
 
+
   return String(
-    binary%1000000
+    binary % 1000000
   ).padStart(6,"0");
+
 }
+
+
 
 let previous="";
 
+
 async function update(){
 
-  const key=normalize(secret.value);
+  const key =
+  normalize(secret.value);
 
-  const now=Math.floor(Date.now()/1000);
 
-  const remaining=30-(now%30);
+  const now =
+  Math.floor(
+    Date.now()/1000
+  );
 
-  timer.textContent=remaining+"s";
 
-  progress.style.width=
-    (remaining/30*100)+"%";
+  const remaining =
+  30 - (now % 30);
+
+
+  timer.textContent =
+  remaining + "s";
+
+
+  progress.style.width =
+  (remaining/30*100) + "%";
+
 
   if(!key){
 
-    code.textContent="------";
-    statusText.textContent="WAITING";
+    code.textContent =
+    "------";
+
+    statusText.textContent =
+    "WAITING";
+
     previous="";
+
     return;
+
   }
+
 
   try{
 
-    const result=
-      await generateTOTP(key);
+    const result =
+    await generateTOTP(key);
+
 
     if(result){
 
-      if(result!==previous){
+      if(result !== previous){
 
-        code.textContent=result;
+        code.textContent =
+        result;
+
 
         code.animate(
+
           [
-            {transform:"scale(1)"},
-            {transform:"scale(1.06)"},
-            {transform:"scale(1)"}
+            {
+              transform:"scale(1)"
+            },
+
+            {
+              transform:"scale(1.06)"
+            },
+
+            {
+              transform:"scale(1)"
+            }
+
           ],
-          {duration:250}
+
+          {
+            duration:250
+          }
+
         );
 
-        previous=result;
+
+        previous =
+        result;
+
       }
 
-      statusText.textContent="SYNC OK";
+
+      statusText.textContent =
+      "SYNC OK";
 
     }
 
+
   }catch(error){
 
-    code.textContent="ERROR";
-    statusText.textContent="INVALID KEY";
+    code.textContent =
+    "ERROR";
+
+    statusText.textContent =
+    "INVALID KEY";
 
   }
+
 }
+
+
 
 async function pasteKey(){
 
   try{
 
-    secret.value=
-      await navigator.clipboard.readText();
+    secret.value =
+    await navigator.clipboard.readText();
 
     update();
 
-    showToast("Key pasted");
+    showToast(
+      "Key pasted"
+    );
 
   }catch{
 
-    showToast("Clipboard unavailable");
+    showToast(
+      "Clipboard unavailable"
+    );
 
   }
+
 }
+
+
 
 function clearKey(){
 
   secret.value="";
+
   previous="";
+
   update();
 
 }
 
+
+
 async function copyCode(){
 
-  const value=code.textContent;
+  const value =
+  code.textContent;
+
 
   if(!/^\d{6}$/.test(value)){
 
-    showToast("No active code");
+    showToast(
+      "No active code"
+    );
+
     return;
+
   }
+
 
   try{
 
-    await navigator.clipboard.writeText(value);
+    await navigator.clipboard.writeText(
+      value
+    );
 
-    showToast("Code copied ✓");
+    showToast(
+      "Code copied ✓"
+    );
 
   }catch{
 
-    showToast("Copy failed");
+    showToast(
+      "Copy failed"
+    );
 
   }
+
 }
+
+
 
 function showToast(message){
 
-  toast.textContent=message;
+  toast.textContent =
+  message;
 
-  toast.classList.add("show");
+  toast.classList.add(
+    "show"
+  );
+
 
   setTimeout(
-    ()=>toast.classList.remove("show"),
+
+    () =>
+    toast.classList.remove(
+      "show"
+    ),
+
     1500
+
   );
+
 }
+
+
+
+/* PWA Service Worker */
+
+if(
+  "serviceWorker"
+  in navigator
+){
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator.serviceWorker
+      .register("./sw.js")
+      .then(() => {
+
+        console.log(
+          "2FA PWA ready"
+        );
+
+      })
+      .catch(error => {
+
+        console.log(
+          "Service Worker error:",
+          error
+        );
+
+      });
+
+    }
+  );
+
+}
+
+
+
+/* Install App */
+
+let deferredPrompt;
+
+const installBtn =
+document.getElementById(
+  "installBtn"
+);
+
+
+window.addEventListener(
+  "beforeinstallprompt",
+  event => {
+
+    event.preventDefault();
+
+    deferredPrompt =
+    event;
+
+    installBtn.style.display =
+    "block";
+
+  }
+);
+
+
+async function installApp(){
+
+  if(!deferredPrompt){
+
+    showToast(
+      "Use browser menu → Install app"
+    );
+
+    return;
+
+  }
+
+
+  deferredPrompt.prompt();
+
+  await deferredPrompt.userChoice;
+
+  deferredPrompt=null;
+
+  installBtn.style.display =
+  "none";
+
+}
+
+
+
+/* Start */
 
 secret.addEventListener(
   "input",
   update
 );
 
+
 update();
+
 
 setInterval(
   update,
@@ -585,6 +1328,7 @@ setInterval(
 );
 
 </script>
+
 
 </body>
 </html>
