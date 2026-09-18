@@ -1,4 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="36" fill="#0f172a"/>
-  <text x="96" y="122" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="bold" fill="#38bdf8" text-anchor="middle">2FA</text>
+  <defs>
+    <radialGradient id="g1" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#0a2a1a"/>
+      <stop offset="100%" stop-color="#02100a"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="192" height="192" rx="36" fill="url(#g1)"/>
+  <rect x="8" y="8" width="176" height="176" rx="30" fill="none" stroke="#00ff9c" stroke-opacity="0.35"/>
+  <text x="96" y="122" font-family="JetBrains Mono, Consolas, monospace"
+        font-size="64" font-weight="800" fill="#00ff9c"
+        text-anchor="middle" filter="url(#glow)">2FA</text>
 </svg>
